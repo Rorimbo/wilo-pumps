@@ -1,0 +1,6 @@
+"name","id","maxpressure","liquidtemp","motor","housingid","impellerid","description","picture","price","weight"
+NOC 25/8 EM,2,37,10,1,1,1,,,123,22
+TNOC 125/8 EM,3,37,10,2,2,1,,,5643,31
+BOC 275/8 EM,4,37,10,3,1,2,,,123,44
+REW 235/8 EM,6,37,10,4,1,2,,,672,11
+POC 235/8 EM,7,37,10,5,2,1,,,462,1.1
