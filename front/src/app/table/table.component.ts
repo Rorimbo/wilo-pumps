@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogComponent } from '../dialog/dialog.component';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { Data } from '../types/data';
-import { Column } from '../types/column';
+import { Column, Types } from '../types/column';
 import { DialogData } from '../types/dialog-data';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -18,7 +18,6 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   pumpData: Data[] = [];
   displayedColumns: string[] = [
-    'id',
     'name',
     'maxPressure',
     'liquidTemp',
@@ -34,22 +33,26 @@ export class TableComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource(this.pumpData);
 
   columns: Column[] = [
-    { code: 'id', name: '№' },
-    { code: 'name', name: 'Наименование' },
-    { code: 'maxPressure', name: 'Максимальное давление' },
-    { code: 'liquidTemp', name: 'Температура жидкости' },
-    { code: 'weight', name: 'Вес' },
-    { code: 'motor', name: 'Мотор' },
-    { code: 'housing', name: 'Материал корпуса' },
-    { code: 'impeller', name: 'Материал рабочего колеса' },
-    { code: 'description', name: 'Описание' },
-    { code: 'picture', name: 'Фото' },
-    { code: 'price', name: 'Цена' },
+    { code: 'id', name: '№', hide: true, type: Types.Number },
+    { code: 'name', name: 'Наименование', type: Types.String },
+    { code: 'maxPressure', name: 'Максимальное давление', type: Types.Number },
+    { code: 'liquidTemp', name: 'Температура жидкости', type: Types.Number },
+    { code: 'weight', name: 'Вес', type: Types.Number },
+    { code: 'motor', name: 'Мотор', type: Types.Select },
+    { code: 'housing', name: 'Материал корпуса', type: Types.Select },
+    { code: 'impeller', name: 'Материал рабочего колеса', type: Types.Select },
+    { code: 'description', name: 'Описание', type: Types.String },
+    { code: 'picture', name: 'Фото', type: Types.String },
+    { code: 'price', name: 'Цена', type: Types.Number },
   ];
 
   constructor(public dialog: MatDialog, private dataService: DataService) {}
 
   ngOnInit() {
+    this.updateTable();
+  }
+
+  updateTable() {
     this.dataService.getData().subscribe({
       next: (pumpData) => {
         this.pumpData = pumpData;
@@ -69,9 +72,10 @@ export class TableComponent implements OnInit, AfterViewInit {
       rows: this.columns,
 
       onSaveClick: (data: Data) => {
+        delete data['id'];
         this.pumpData.push(data);
         this.dataSource.data = this.pumpData;
-        this.dataService.addData(data);
+        this.dataService.addData(data).subscribe(() => this.updateTable());
       },
     };
 
@@ -83,23 +87,26 @@ export class TableComponent implements OnInit, AfterViewInit {
     });
   }
 
-  editData(rowIndex: number): void {
-    let dialogData: DialogData = {
-      title: 'Редактирование',
-      rowData: this.pumpData[rowIndex],
-      rows: this.columns,
-      onSaveClick: (data: Data) => {
-        this.pumpData[rowIndex] = data;
-        this.dataSource.data = this.pumpData;
-        this.dataService.updateData(data);
-      },
-    };
+  editData(id: number): void {
+    this.dataService.getDataById(id).subscribe((rowData) => {
+      let dialogData: DialogData = {
+        title: 'Редактирование',
+        rowData: rowData,
+        rows: this.columns,
+        onSaveClick: (data: Data) => {
+          let rowIndex = this.pumpData.findIndex((el) => el.id == id);
+          this.pumpData[rowIndex] = data;
+          this.dataSource.data = this.pumpData;
+          this.dataService.updateData(data).subscribe(() => this.updateTable());
+        },
+      };
 
-    this.dialog.open(DialogComponent, {
-      width: '448px',
-      height: '593px',
-      panelClass: 'dialog-cont',
-      data: dialogData,
+      this.dialog.open(DialogComponent, {
+        width: '448px',
+        height: '593px',
+        panelClass: 'dialog-cont',
+        data: dialogData,
+      });
     });
   }
 
@@ -108,7 +115,7 @@ export class TableComponent implements OnInit, AfterViewInit {
     let dialogData: DialogData = {
       title: title,
       onSaveClick: () => {
-        let id = data.id;
+        let id = data.id || -1;
         let index = this.pumpData.indexOf(data);
         this.pumpData.splice(index, 1);
         this.dataSource.data = this.pumpData;

@@ -1,5 +1,5 @@
 export type Data = {
-  id: number;
+  id?: number;
   name: string;
   maxPressure: string | number;
   liquidTemp: string | number;

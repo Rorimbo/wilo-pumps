@@ -1,31 +1,87 @@
 <div class="dialog">
   <h1 class="dialog-title">{{ data.title }}</h1>
   <form [formGroup]="formGroup" class="dialog-content">
-    <mat-form-field
-      *ngFor="let field of data?.rows"
-      appearance="outline"
-      class="form-field"
-      hideRequiredMarker
-      [class.filled-field]="checkIfFieldFilled(field.code)"
-    >
-      <mat-label class="name-label">{{ field.name }}</mat-label>
-      <input
-        class="name-input"
-        type="text"
-        matInput
-        placeholder="{{ field.name }}"
-        formControlName="{{ field.code }}"
-      />
-      <mat-error
-        align="end"
-        *ngIf="
-          formGroup.controls[field.code].hasError('required') &&
-          formGroup.controls[field.code].dirty
-        "
-      >
-        Это обязательное поле
-      </mat-error>
-    </mat-form-field>
+    <div *ngFor="let field of data?.rows">
+      <ng-container [ngSwitch]="field.type" *ngIf="!field.hide">
+        <ng-container *ngSwitchCase="types.Select">
+          <mat-form-field
+            appearance="outline"
+            class="form-field"
+            hideRequiredMarker
+            [class.filled-field]="checkIfFieldFilled(field.code)"
+          >
+            <mat-label>{{ field.name }}</mat-label>
+            <mat-select formControlName="{{ field.code }}">
+              <ng-container *ngIf="field.code == 'motor'; else material">
+                <mat-option *ngFor="let select of motors" [value]="select.id">{{
+                  select.name
+                }}</mat-option></ng-container
+              >
+
+              <ng-template #material>
+                <mat-option
+                  *ngFor="let select of materials"
+                  [value]="select.id"
+                  >{{ select.name }}</mat-option
+                ></ng-template
+              >
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngSwitchCase="types.Number"
+          ><mat-form-field
+            appearance="outline"
+            class="form-field"
+            hideRequiredMarker
+            [class.filled-field]="checkIfFieldFilled(field.code)"
+          >
+            <mat-label class="name-label">{{ field.name }}</mat-label>
+            <input
+              class="name-input"
+              type="number"
+              matInput
+              placeholder="{{ field.name }}"
+              formControlName="{{ field.code }}"
+            />
+            <mat-error
+              align="end"
+              *ngIf="
+                formGroup.controls[field.code].hasError('required') &&
+                formGroup.controls[field.code].dirty
+              "
+            >
+              Это обязательное поле
+            </mat-error>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngSwitchDefault
+          ><mat-form-field
+            appearance="outline"
+            class="form-field"
+            hideRequiredMarker
+            [class.filled-field]="checkIfFieldFilled(field.code)"
+          >
+            <mat-label class="name-label">{{ field.name }}</mat-label>
+            <input
+              class="name-input"
+              type="text"
+              matInput
+              placeholder="{{ field.name }}"
+              formControlName="{{ field.code }}"
+            />
+            <mat-error
+              align="end"
+              *ngIf="
+                formGroup.controls[field.code].hasError('required') &&
+                formGroup.controls[field.code].dirty
+              "
+            >
+              Это обязательное поле
+            </mat-error>
+          </mat-form-field></ng-container
+        >
+      </ng-container>
+    </div>
   </form>
 
   <div class="dialog-actions">

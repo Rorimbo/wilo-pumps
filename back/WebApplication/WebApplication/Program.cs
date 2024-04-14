@@ -38,7 +38,7 @@ app.MapDelete("/api/pumps/delete/{id:int}", async (int id, ApplicationContext db
 app.MapPost("/api/pumps/add", async (Data<int> pump, ApplicationContext db) =>
 {
     db.AddPump(pump);
-    return pump;
+    return Results.Json(pump);
 });
 
 app.MapPut("/api/pumps/update", async (Data<int> pumpData, ApplicationContext db) =>
