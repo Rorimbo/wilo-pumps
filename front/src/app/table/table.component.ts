@@ -18,6 +18,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   pumpData: Data[] = [];
   displayedColumns: string[] = [
+    'id',
     'name',
     'maxPressure',
     'liquidTemp',
@@ -33,6 +34,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource(this.pumpData);
 
   columns: Column[] = [
+    { code: 'id', name: '№' },
     { code: 'name', name: 'Наименование' },
     { code: 'maxPressure', name: 'Максимальное давление' },
     { code: 'liquidTemp', name: 'Температура жидкости' },

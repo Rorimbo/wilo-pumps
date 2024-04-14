@@ -14,14 +14,14 @@ export class DataService {
   }
 
   addData(data: Data) {
-    return this.api.addData(data);
+    return this.api.addData(data).subscribe();
   }
 
   updateData(data: Data) {
-    return this.api.updateData(data);
+    return this.api.updateData(data).subscribe();
   }
 
   deleteData(id: number) {
-    return this.api.deleteData(id);
+    return this.api.deleteData(id).subscribe();
   }
 }

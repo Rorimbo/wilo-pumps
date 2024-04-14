@@ -9,7 +9,11 @@ List<Data> pumps = new List<Data>
 };
 
 var builder = WebApplication.CreateBuilder();
+builder.Services.AddCors();
+
 var app = builder.Build();
+app.UseCors(builder => builder.AllowAnyOrigin());
+
 
 app.Run(async (context) =>
 {
