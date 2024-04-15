@@ -6,6 +6,7 @@ import { SelectData } from '../types/select-data';
 import { forkJoin } from 'rxjs';
 import { DataService } from '../services/data.service';
 import { Types } from '../types/column';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-dialog',
@@ -31,7 +32,8 @@ export class DialogComponent implements OnInit {
     public dialogRef: MatDialogRef<DialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     private fb: FormBuilder,
-    public dataService: DataService
+    public dataService: DataService,
+    private _snackBar: MatSnackBar
   ) {
     if (!data) {
       this.data = {} as DialogData;
@@ -53,6 +55,14 @@ export class DialogComponent implements OnInit {
     }
   }
 
+  openSnackBar(message: string) {
+    this._snackBar.open(message, 'Закрыть', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      duration: 10000,
+    });
+  }
+
   ngOnInit(): void {
     forkJoin([
       this.dataService.getMotors(),
@@ -61,6 +71,9 @@ export class DialogComponent implements OnInit {
       next: ([motors, materials]) => {
         this.motors = motors;
         this.materials = materials;
+      },
+      error: () => {
+        this.openSnackBar('Ошибка получения данных');
       },
     });
   }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from './api.service';
-import { Observable, map, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Data } from '../types/data';
 
 @Injectable({
@@ -26,7 +26,7 @@ export class DataService {
   }
 
   deleteData(id: number) {
-    return this.api.deleteData(id).subscribe();
+    return this.api.deleteData(id);
   }
 
   getMotors() {

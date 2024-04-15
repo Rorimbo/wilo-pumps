@@ -8,6 +8,7 @@ import { DialogData } from '../types/dialog-data';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataService } from '../services/data.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-table',
@@ -51,7 +52,19 @@ export class TableComponent implements OnInit, AfterViewInit {
     { code: 'price', name: 'Цена', type: Types.Number },
   ];
 
-  constructor(public dialog: MatDialog, private dataService: DataService) {}
+  constructor(
+    public dialog: MatDialog,
+    private dataService: DataService,
+    private _snackBar: MatSnackBar
+  ) {}
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, 'Закрыть', {
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      duration: 10000,
+    });
+  }
 
   ngOnInit() {
     this.updateTable();
@@ -63,7 +76,9 @@ export class TableComponent implements OnInit, AfterViewInit {
         this.pumpData = pumpData;
         this.dataSource.data = this.pumpData;
       },
-      error: (err: any) => console.log(err),
+      error: () => {
+        this.openSnackBar('Ошибка получения данных');
+      },
     });
   }
 
@@ -80,7 +95,12 @@ export class TableComponent implements OnInit, AfterViewInit {
         delete data['id'];
         this.pumpData.push(data);
         this.dataSource.data = this.pumpData;
-        this.dataService.addData(data).subscribe(() => this.updateTable());
+        this.dataService.addData(data).subscribe({
+          next: () => this.updateTable(),
+          error: () => {
+            this.openSnackBar('Ошибка добавления данных');
+          },
+        });
       },
     };
 
@@ -93,25 +113,35 @@ export class TableComponent implements OnInit, AfterViewInit {
   }
 
   editData(id: number): void {
-    this.dataService.getDataById(id).subscribe((rowData) => {
-      let dialogData: DialogData = {
-        title: 'Редактирование',
-        rowData: rowData,
-        rows: this.columns,
-        onSaveClick: (data: Data) => {
-          let rowIndex = this.pumpData.findIndex((el) => el.id == id);
-          this.pumpData[rowIndex] = data;
-          this.dataSource.data = this.pumpData;
-          this.dataService.updateData(data).subscribe(() => this.updateTable());
-        },
-      };
+    this.dataService.getDataById(id).subscribe({
+      next: (rowData) => {
+        let dialogData: DialogData = {
+          title: 'Редактирование',
+          rowData: rowData,
+          rows: this.columns,
+          onSaveClick: (data: Data) => {
+            let rowIndex = this.pumpData.findIndex((el) => el.id == id);
+            this.pumpData[rowIndex] = data;
+            this.dataSource.data = this.pumpData;
+            this.dataService.updateData(data).subscribe({
+              next: () => this.updateTable(),
+              error: () => {
+                this.openSnackBar('Ошибка изменения данных');
+              },
+            });
+          },
+        };
 
-      this.dialog.open(DialogComponent, {
-        width: '448px',
-        height: '593px',
-        panelClass: 'dialog-cont',
-        data: dialogData,
-      });
+        this.dialog.open(DialogComponent, {
+          width: '448px',
+          height: '593px',
+          panelClass: 'dialog-cont',
+          data: dialogData,
+        });
+      },
+      error: () => {
+        this.openSnackBar('Ошибка получения данных с id = ' + id);
+      },
     });
   }
 
@@ -124,7 +154,11 @@ export class TableComponent implements OnInit, AfterViewInit {
         let index = this.pumpData.indexOf(data);
         this.pumpData.splice(index, 1);
         this.dataSource.data = this.pumpData;
-        this.dataService.deleteData(id);
+        this.dataService.deleteData(id).subscribe({
+          error: () => {
+            this.openSnackBar('Ошибка удаления данных');
+          },
+        });
       },
     };
 

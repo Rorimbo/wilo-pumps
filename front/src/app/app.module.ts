@@ -17,6 +17,7 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { MatSelectModule } from '@angular/material/select';
     HttpClientModule,
     MatSortModule,
     MatSelectModule,
+    MatSnackBarModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
