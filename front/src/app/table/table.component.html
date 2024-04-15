@@ -32,7 +32,17 @@
           *matCellDef="let element; let i = index"
           [class]="column.code + '-column table-column table-cell'"
         >
-          {{ element[column.code] }}
+          <img
+            *ngIf="column.code == 'picture'; else defaultCell"
+            class="motor-img"
+            [src]="
+              element[column.code]
+                ? 'assets/' + element[column.code] + '.jpg'
+                : ''
+            "
+            alt="{{ element[column.code] }}"
+          />
+          <ng-template #defaultCell>{{ element[column.code] }}</ng-template>
         </td>
       </ng-container>
 

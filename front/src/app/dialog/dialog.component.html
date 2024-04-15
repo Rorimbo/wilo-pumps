@@ -12,19 +12,43 @@
           >
             <mat-label>{{ field.name }}</mat-label>
             <mat-select formControlName="{{ field.code }}">
-              <ng-container *ngIf="field.code == 'motor'; else material">
-                <mat-option *ngFor="let select of motors" [value]="select.id">{{
-                  select.name
-                }}</mat-option></ng-container
-              >
+              <ng-container [ngSwitch]="field.code">
+                <ng-container *ngSwitchCase="'motor'">
+                  <mat-option
+                    *ngFor="let select of motors"
+                    [value]="select.id"
+                    >{{ select.name }}</mat-option
+                  >
+                </ng-container>
 
-              <ng-template #material>
-                <mat-option
-                  *ngFor="let select of materials"
-                  [value]="select.id"
-                  >{{ select.name }}</mat-option
-                ></ng-template
-              >
+                <ng-container *ngSwitchDefault>
+                  <mat-option
+                    *ngFor="let select of materials"
+                    [value]="select.id"
+                    >{{ select.name }}</mat-option
+                  ></ng-container
+                >
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        <ng-container *ngSwitchCase="types.Photo">
+          <mat-form-field
+            appearance="outline"
+            class="form-field"
+            hideRequiredMarker
+            [class.filled-field]="checkIfFieldFilled(field.code)"
+          >
+            <mat-label>{{ field.name }}</mat-label>
+            <mat-select formControlName="{{ field.code }}">
+              <mat-option> </mat-option>
+              <mat-option *ngFor="let select of pictures" [value]="select">
+                <img
+                  class="motor-img-dialog"
+                  [src]="select ? 'assets/' + select + '.jpg' : null"
+                  alt="{{ select }}"
+                  title="{{ select }}"
+              /></mat-option>
             </mat-select>
           </mat-form-field>
         </ng-container>

@@ -33,7 +33,7 @@ export class TableComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource(this.pumpData);
 
   columns: Column[] = [
-    { code: 'id', name: '№', hide: true, type: Types.Number },
+    { code: 'id', name: '№', hide: true, type: Types.Number, nullable: true },
     { code: 'name', name: 'Наименование', type: Types.String },
     { code: 'maxPressure', name: 'Максимальное давление', type: Types.Number },
     { code: 'liquidTemp', name: 'Температура жидкости', type: Types.Number },
@@ -41,8 +41,13 @@ export class TableComponent implements OnInit, AfterViewInit {
     { code: 'motor', name: 'Мотор', type: Types.Select },
     { code: 'housing', name: 'Материал корпуса', type: Types.Select },
     { code: 'impeller', name: 'Материал рабочего колеса', type: Types.Select },
-    { code: 'description', name: 'Описание', type: Types.String },
-    { code: 'picture', name: 'Фото', type: Types.String },
+    {
+      code: 'description',
+      name: 'Описание',
+      type: Types.String,
+      nullable: true,
+    },
+    { code: 'picture', name: 'Фото', type: Types.Photo, nullable: true },
     { code: 'price', name: 'Цена', type: Types.Number },
   ];
 

@@ -16,6 +16,14 @@ export class DialogComponent implements OnInit {
   formGroup: FormGroup;
   motors: SelectData[];
   materials: SelectData[];
+  pictures: string[] = [
+    'RTEW_2358_EM_v3',
+    'NOC_258_EM',
+    'TNOC_1258_EM',
+    'BOC_2758_EM',
+    'REW_2358_EM',
+    'POC_2358_EM',
+  ];
 
   types = Types;
 
@@ -34,7 +42,7 @@ export class DialogComponent implements OnInit {
       newForm = {
         ...newForm,
         ...{
-          [row.code]: ['', row.hide ? null : Validators.required],
+          [row.code]: ['', row.nullable ? null : Validators.required],
         },
       };
     });

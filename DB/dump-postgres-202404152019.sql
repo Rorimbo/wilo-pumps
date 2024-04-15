@@ -5,7 +5,7 @@
 -- Dumped from database version 16.2
 -- Dumped by pg_dump version 16.2
 
--- Started on 2024-04-14 23:52:11
+-- Started on 2024-04-15 20:19:55
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -384,12 +384,12 @@ INSERT INTO public.motors OVERRIDING SYSTEM VALUE VALUES ('W22', 12, 220, 2000, 
 -- Data for Name: pumps; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('RTEW 235/8 EM v3', 15, 22, 23, 1, 7, 7, 'd', 'd', 23, 22);
-INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('NOC 25/8 EM', 16, 37, 10, 1, 1, 1, NULL, NULL, 123, 22);
-INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('TNOC 125/8 EM', 17, 37, 10, 2, 2, 1, NULL, NULL, 5643, 31);
-INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('BOC 275/8 EM', 18, 37, 10, 3, 1, 2, NULL, NULL, 123, 44);
-INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('REW 235/8 EM', 19, 37, 10, 4, 1, 2, NULL, NULL, 672, 11);
 INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('POC 235/8 EM', 20, 37, 10, 5, 2, 1, NULL, NULL, 462, 1.1);
+INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('RTEW 235/8 EM v3', 15, 22, 23, 1, 7, 7, 'd', 'RTEW_2358_EM_v3', 23, 22);
+INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('NOC 25/8 EM', 16, 37, 10, 1, 1, 1, '', 'NOC_258_EM', 123, 22);
+INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('REW 235/8 EM', 19, 37, 10, 4, 1, 2, '', 'REW_2358_EM', 672, 11);
+INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('TNOC 125/8 EM', 17, 37, 10, 2, 2, 1, '', 'TNOC_1258_EM', 5643, 31);
+INSERT INTO public.pumps OVERRIDING SYSTEM VALUE VALUES ('BOC 275/8 EM', 18, 37, 10, 3, 1, 2, '', 'BOC_2758_EM', 123, 44);
 
 
 --
@@ -482,7 +482,7 @@ ALTER TABLE ONLY public.pumps
     ADD CONSTRAINT pumps_motors_fk FOREIGN KEY (motor) REFERENCES public.motors(id);
 
 
--- Completed on 2024-04-14 23:52:11
+-- Completed on 2024-04-15 20:19:55
 
 --
 -- PostgreSQL database dump complete
